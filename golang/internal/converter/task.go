@@ -13,10 +13,9 @@ import (
 	"sort"
 	"strconv"
 	"time"
-
 	"imersaofc/pkg/rabbitmq"
-
 	"github.com/streadway/amqp"
+
 )
 
 // VideoConverter handles video conversion tasks
@@ -38,16 +37,19 @@ func NewVideoConverter(rabbitClient *rabbitmq.RabbitClient, db *sql.DB, rootPath
 		rabbitClient: rabbitClient,
 		db:           db,
 		rootPath:     rootPath,
+
 	}
 }
 
 // HandleMessage processes a video conversion message
+
 func (vc *VideoConverter) HandleMessage(ctx context.Context, d amqp.Delivery, conversionExch, confirmationKey, confirmationQueue string) {
 	var task VideoTask
 
 	if err := json.Unmarshal(d.Body, &task); err != nil {
 		vc.logError(task, "Failed to deserialize message", err)
 		d.Ack(false)
+
 		return
 	}
 
@@ -55,6 +57,7 @@ func (vc *VideoConverter) HandleMessage(ctx context.Context, d amqp.Delivery, co
 	if IsProcessed(vc.db, task.VideoID) {
 		slog.Warn("Video already processed", slog.Int("video_id", task.VideoID))
 		d.Ack(false)
+
 		return
 	}
 
@@ -62,7 +65,9 @@ func (vc *VideoConverter) HandleMessage(ctx context.Context, d amqp.Delivery, co
 	err := vc.processVideo(&task)
 	if err != nil {
 		vc.logError(task, "Error during video conversion", err)
+
 		d.Ack(false)
+
 		return
 	}
 	slog.Info("Video conversion processed", slog.Int("video_id", task.VideoID))
@@ -86,6 +91,7 @@ func (vc *VideoConverter) HandleMessage(ctx context.Context, d amqp.Delivery, co
 
 // processVideo handles video processing (merging chunks and converting)
 func (vc *VideoConverter) processVideo(task *VideoTask) error {
+
 	chunkPath := filepath.Join(vc.rootPath, fmt.Sprintf("%d", task.VideoID))
 	mergedFile := filepath.Join(chunkPath, "merged.mp4")
 	mpegDashPath := filepath.Join(chunkPath, "mpeg-dash")
@@ -93,6 +99,7 @@ func (vc *VideoConverter) processVideo(task *VideoTask) error {
 	// Merge chunks
 	slog.Info("Merging chunks", slog.String("path", chunkPath))
 	if err := vc.mergeChunks(chunkPath, mergedFile); err != nil {
+
 		return fmt.Errorf("failed to merge chunks: %v", err)
 	}
 
