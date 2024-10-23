@@ -17,7 +17,7 @@ class VideoSerializer(serializers.ModelSerializer):
 
     def get_thumbnail(self, obj):
         assets_url = settings.ASSETS_URL
-        return f'{assets_url}{obj.thumbnail}'
+        return f'{assets_url}/{obj.thumbnail}'
     
     def get_video_url(self, obj):
         assets_url = settings.ASSETS_URL

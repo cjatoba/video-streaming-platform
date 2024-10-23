@@ -137,5 +137,9 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+MEDIA_URL = os.environ.get('ASSETS_URL') + '/'
+
+MEDIA_ROOT = '/media/uploads/'
+
 RABBITMQ_URL = os.environ.get('RABBITMQ_URL')
 ASSETS_URL = os.environ.get('ASSETS_URL')
