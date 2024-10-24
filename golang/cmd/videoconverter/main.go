@@ -14,6 +14,8 @@ import (
 	"imersaofc/pkg/log"
 	"imersaofc/pkg/rabbitmq"
 
+	"imersaofc/pkg/rabbitmq"
+
 	_ "github.com/lib/pq"
 	"github.com/streadway/amqp"
 )
@@ -85,12 +87,14 @@ func main() {
 
 	videoConverter := converter.NewVideoConverter(rabbitClient, db, rootPath)
 
+
 	// Consumir mensagens da fila de conversão
 	msgs, err := rabbitClient.ConsumeMessages(conversionExch, conversionKey, queueName)
 	if err != nil {
 		slog.Error("Failed to consume messages", slog.String("error", err.Error()))
 		return
 	}
+
 
 	var wg sync.WaitGroup
 	go func() {
@@ -99,6 +103,7 @@ func main() {
 			go func(delivery amqp.Delivery) {
 				defer wg.Done()
 				videoConverter.HandleMessage(ctx, delivery, conversionExch, confirmationKey, confirmationQueue)
+
 			}(d)
 		}
 	}()
@@ -108,6 +113,7 @@ func main() {
 	slog.Info("Shutdown signal received, finalizing processing...")
 
 	cancel()
+
 	wg.Wait()
 
 	slog.Info("Processing completed, exiting...")

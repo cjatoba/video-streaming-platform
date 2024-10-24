@@ -27,7 +27,26 @@ class Video(models.Model):
     num_likes = models.IntegerField(default=0, verbose_name='Likes', editable=False)
     num_views = models.IntegerField(default=0, verbose_name='Visualizações', editable=False)
     tags = models.ManyToManyField('Tag', verbose_name='Tags', related_name='videos')
-    author = models.ForeignKey('auth.User', on_delete=models.PROTECT, verbose_name='Autor', related_name='videos', editable=False)
+    author = models.ForeignKey('auth.User', on_delete=models.PROTECT, verbose_name='Autor', related_name='videos', editable=False, null=True)
+
+    def save(
+        self,
+        force_insert=False,
+        force_update=False,
+        using=None,
+        update_fields=None,
+    ):
+        if self.is_published and not self.published_at:
+            self.published_at = timezone.now()
+        return super().save(force_insert, force_update, using, update_fields)
+
+    def clean(self):
+        if self.is_published:
+            if not hasattr(self, 'video_media'):
+                raise ValidationError('O vídeo não possui mídia associada.')
+            if self.video_media.status != VideoMedia.Status.PROCESS_FINISHED:
+                raise ValidationError('O vídeo não foi processado.')
+
 
     def save(
         self,
