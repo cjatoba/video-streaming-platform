@@ -13,9 +13,7 @@ import (
 	"sort"
 	"strconv"
 	"time"
-
 	"imersaofc/pkg/rabbitmq"
-
 	"github.com/streadway/amqp"
 )
 
