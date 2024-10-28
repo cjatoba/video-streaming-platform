@@ -4,6 +4,7 @@ include:
   
 services:
   go_app_dev:
+    container_name: go_app_dev
     build:
       context: .
       dockerfile: Dockerfile
