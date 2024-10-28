@@ -1,5 +1,6 @@
 services:
   postgres:
+    container_name: postgres
     image: postgres:15.8-alpine3.20
     ports:
       - 5432:5432
@@ -11,6 +12,7 @@ services:
       - ../django/prepare-db.sql:/docker-entrypoint-initdb.d/prepare-db-django.sql
 
   pgadmin:
+    container_name: pgadmin
     image: dpage/pgadmin4:8.11.0
     restart: always
     ports:
