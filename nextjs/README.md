@@ -12,7 +12,7 @@ Levante o container do Next.js:
 docker-compose up -d
 ```
 
-Entre no container do Django:
+Entre no container do Next.js:
 
 ```bash
 docker-compose exec nextjs bash

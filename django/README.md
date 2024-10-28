@@ -49,11 +49,10 @@ python manage.py createsuperuser
 Rode o servidor:
 
 ```bash
-python manage.py runserver
+python manage.py runserver 0.0.0.0:8000
 ```
 
 Acesse o admin em [http://localhost:8000/admin]().
-
 
 ## Dados de testes
 
@@ -73,13 +72,14 @@ Usaremos a estratégia do `host.docker.internal` para comunicação entre os con
 Para isto é necessário configurar um endereços que todos os containers Docker consigam acessar.
 
 Acrescente no seu /etc/hosts (para Windows o caminho é C:\Windows\system32\drivers\etc\hosts):
+
 ```
 127.0.0.1 host.docker.internal
 ```
-Em todos os sistemas operacionais é necessário abrir o programa para editar o *hosts* como Administrator da máquina ou root.
+
+Em todos os sistemas operacionais é necessário abrir o programa para editar o _hosts_ como Administrator da máquina ou root.
 
 Obs.: Se estiver usando o Docker Desktop, pode ser que o `host.docker.internal` já esteja configurado, então remova a linha do arquivo hosts e acrescente a recomendada acima.
-
 
 ## Consumer do RabbitMQ
 
@@ -87,6 +87,12 @@ Para rodar o consumer do RabbitMQ, entre no container do Django:
 
 ```bash
 docker-compose exec django bash
+```
+
+Precisamos sempre rodar os comandos dentro do ambiente virtual do Pipenv:
+
+```bash
+pipenv shell
 ```
 
 Rode os consumers:
