@@ -23,8 +23,14 @@ Se você estiver no Windows, use o WSL 2. Veja nosso tutorial [https://github.co
 
 ## Rodar a aplicação
 
+Crie um volume docker com o nome `external-storage` que será compartilhado entre todos os serviços:
+
+```bash
+docker volume create external-storage
+```
+
 Rode todas as aplicações com o comando:
-    
+
 ```bash
 docker-compose up -d
 ```
@@ -32,7 +38,6 @@ docker-compose up -d
 Este comando irá subir todos os containers necessários para rodar todo o projeto
 
 Acesse as pastas `golang`, `django` e `nextjs` e siga as instruções.
-
 
 ## Arquitetura do projeto
 
